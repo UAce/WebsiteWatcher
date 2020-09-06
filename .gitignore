@@ -1,2 +1,5 @@
 draft/*
-__pycache__/*
+.vscode/*
+__pycache__
+*.log
+*.pyc
