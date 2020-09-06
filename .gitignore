@@ -1,5 +1,5 @@
 draft/*
 .vscode/*
 __pycache__
-*.log
+logs/*
 *.pyc

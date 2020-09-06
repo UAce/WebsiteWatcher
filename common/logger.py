@@ -2,9 +2,9 @@ from logging import Formatter
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
-#The background is set with 40 plus the number of the color, and the foreground with 30
+# Background is set with 40 plus the number of the color, foreground with 30
 
-#These are the sequences need to get colored ouput
+# These are the sequences needed to get colored ouput
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
@@ -30,7 +30,7 @@ COLORS = {
 
 
 class CustomFormatter(Formatter):
-    def __init__(self, use_color=True, datefmt=None):
+    def __init__(self, use_color: bool = True, datefmt: str = None):
         msg = formatter_message(use_color)
         Formatter.__init__(self, msg, datefmt=datefmt)
         self.use_color = use_color

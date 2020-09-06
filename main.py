@@ -2,9 +2,7 @@ from config import config
 import logging
 
 from watchers import ListWatcher, BaseWatcher
-from common.logger_utils import color_formatter, default_formatter
-
-logger = logging.getLogger(__name__)
+from common.logger import color_formatter, default_formatter
 
 
 def configure_logger(watcher: BaseWatcher) -> None:
@@ -19,7 +17,7 @@ def configure_logger(watcher: BaseWatcher) -> None:
 
 def main() -> None:
     target_url = "https://www.petfinder.com/search/cats-for-adoption/ca/quebec/montreal/?age%5B0%5D=Baby&distance=10&gender%5B0%5D=female"
-    initial_count = 5
+    initial_count = 4
     options = dict(
         list_element='pfdc-animal-search-results',
         list_attr='observe-state',

@@ -7,3 +7,8 @@ version = "1.0.0"
 
 [watcher_settings]
 polling_interval = 10
+
+[email]
+api_key = "some_api_key"
+sender = "from_email@example.com"
+recipient = "to@example.com"
