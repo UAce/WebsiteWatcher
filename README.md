@@ -1,6 +1,6 @@
-# websiteWatcher
+# WebsiteWatcher
 
-websiteWatcher is a Python tool for running a website watcher.
+WebsiteWatcher is a Python tool for running a website watcher.
 
 ## Installation
 
@@ -8,7 +8,7 @@ websiteWatcher is a Python tool for running a website watcher.
 
 ## Usage
 
-Before running your watcher,
+Look at the [sample commands](https://github.com/UAce/WebsiteWatcher/tree/master/example) for examples.
 
 ```bash
 usage: main.py [-h] --url URL [--list-tag LIST_TAG]
@@ -20,7 +20,7 @@ usage: main.py [-h] --url URL [--list-tag LIST_TAG]
                [--polling-interval POLLING_INTERVAL]
                {list,price}
 
-websiteWatcher is a Python CLI tool for running a website watcher
+WebsiteWatcher is a Python CLI tool for running a website watcher
 
 positional arguments:
   {list,price}          the watcher type
