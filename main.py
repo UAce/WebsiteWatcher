@@ -1,36 +1,32 @@
-from config import config
-import logging
+from argparse import Namespace
 
-from watchers import ListWatcher, BaseWatcher
-from common.logger import color_formatter, default_formatter
-
-
-def configure_logger(watcher: BaseWatcher) -> None:
-    console = logging.StreamHandler()
-    console.setFormatter(color_formatter)
-    log_file = logging.FileHandler(
-        filename=f"{config['log_dir']}/{watcher.name}.log")
-    log_file.setFormatter(default_formatter)
-    logging.basicConfig(
-        level=config['log_level'], handlers=[console, log_file])
+from watchers.list_watcher import ListWatcher
+from common.utils import configure_logger, parse_arguments
 
 
-def main() -> None:
-    target_url = "https://www.petfinder.com/search/cats-for-adoption/ca/quebec/montreal/?age%5B0%5D=Baby&distance=10&gender%5B0%5D=female"
-    initial_count = 4
-    options = dict(
-        list_element='pfdc-animal-search-results',
-        list_attr='observe-state',
-        list_attr_val='animalSearch.results',
-        target_element='span',
-        target_attr='data-test',
-        target_attr_val='Pet_Card_Pet_Details_List')
+def main(args: Namespace) -> None:
+    print('Running main...')
+    watcher = None
+    if args.watcher_type == 'list':
+        options = dict(
+            polling_interval=args.polling_interval,
+            list_tag=args.list_tag,
+            list_attr=args.list_attribute,
+            list_attr_val=args.list_attribute_value,
+            target_tag=args.target_tag,
+            target_attr=args.target_attribute,
+            target_attr_val=args.target_attribute_value)
+        watcher = ListWatcher(args.url, args.initial_count, options)
+    elif args.watcher_type == 'price':
+        # TODO: create PriceWatcher
+        pass
+    else:
+        raise Exception(f'Invalid watcher_type [{args.watcher_type}]')
 
-    cw = ListWatcher(target_url, initial_count, options)
-    configure_logger(cw)
-    cw.start()
+    configure_logger(watcher.name)
+    watcher.start()
 
 
 if __name__ == "__main__":
-    print('Running main...')
-    main()
+    args = parse_arguments()
+    main(args)

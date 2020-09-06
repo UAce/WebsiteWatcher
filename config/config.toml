@@ -4,6 +4,7 @@ log_dir = "/home/yuehl/projects/Other/personal/websiteWatcher/logs"
 [project]
 author = "Yu-Yueh Liu"
 version = "1.0.0"
+description = "websiteWatcher is a Python CLI tool for running a website watcher"
 
 [watcher_settings]
 polling_interval = 10
