@@ -4,7 +4,7 @@ import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from config import config
+from settings.config import config
 from common.utils import send_email
 
 log = logging.getLogger(__name__)

@@ -16,7 +16,7 @@ def main(args: Namespace) -> None:
             target_tag=args.target_tag,
             target_attr=args.target_attribute,
             target_attr_val=args.target_attribute_value)
-        watcher = ListWatcher(args.url, args.initial_count, options)
+        watcher = ListWatcher(args.url, options)
     elif args.watcher_type == 'price':
         # TODO: create PriceWatcher
         pass

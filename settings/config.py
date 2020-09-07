@@ -2,7 +2,7 @@ import toml
 import os
 
 # Read local `config.toml` file
-config_file_path = 'config/config.toml'
+config_file_path = 'settings/config.toml'
 config = toml.load(config_file_path)
 
 # Retrieving a dictionary of values

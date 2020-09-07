@@ -5,6 +5,8 @@ log_dir = "/home/yuehl/projects/Other/personal/websiteWatcher/logs"
 author = "Yu-Yueh Liu"
 version = "1.0.0"
 description = "websiteWatcher is a Python CLI tool for running a website watcher"
+list_watcher = "List Watcher monitors changes in a list of items"
+price_watcher = "Price Watcher monitors changes in the price of an item"
 
 [watcher_settings]
 polling_interval = 10
