@@ -39,7 +39,7 @@ def parse_arguments() -> Namespace:
         choices=["email", "sms"],
         help="The method of notification. Default is email.",
     )
-    parser.add_argument("--debug", type=bool, default=False, help="Show debug logs")
+    parser.add_argument("--debug", action="store_true", help="Show debug logs")
 
     # Create Subparsers for different types of watchers
     subparsers = parser.add_subparsers(dest="watcher_type", help="types of Watcher")
