@@ -3,3 +3,4 @@ draft/*
 __pycache__
 logs/*
 *.pyc
+.tox/*
