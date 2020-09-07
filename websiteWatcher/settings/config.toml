@@ -3,8 +3,8 @@ log_dir = "/home/yuehl/projects/Other/personal/websiteWatcher/logs"
 
 [project]
 author = "Yu-Yueh Liu"
-version = "1.0.0"
-description = "websiteWatcher is a Python CLI tool for running a website watcher"
+version = "0.0.1"
+description = "WebsiteWatcher is a Python CLI tool for running a website watcher"
 list_watcher = "List Watcher monitors changes in a list of items"
 price_watcher = "Price Watcher monitors changes in the price of an item"
 
