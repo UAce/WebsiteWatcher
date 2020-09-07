@@ -15,12 +15,13 @@ from websiteWatcher.common.logger import color_formatter, default_formatter
 log = logging.getLogger(__name__)
 
 
-def configure_logger(watcher_name: str) -> None:
+def configure_logger(watcher_name: str, debug: bool = False) -> None:
+    log_level = debug if debug else config["log_level"]
     console = logging.StreamHandler()
     console.setFormatter(color_formatter)
     log_file = logging.FileHandler(filename=f"{config['log_dir']}/{watcher_name}.log")
     log_file.setFormatter(default_formatter)
-    logging.basicConfig(level=config["log_level"], handlers=[console, log_file])
+    logging.basicConfig(level=log_level, handlers=[console, log_file])
 
 
 def parse_arguments() -> Namespace:
@@ -29,7 +30,7 @@ def parse_arguments() -> Namespace:
         "--polling-interval",
         type=int,
         default=60,
-        help="Number of seconds to wait between each poll. Default is 60.",
+        help="Seconds to wait between each poll. Default is 60",
     )
     parser.add_argument(
         "--notification-method",
@@ -38,6 +39,7 @@ def parse_arguments() -> Namespace:
         choices=["email", "sms"],
         help="The method of notification. Default is email.",
     )
+    parser.add_argument("--debug", type=bool, default=False, help="Show debug logs")
 
     # Create Subparsers for different types of watchers
     subparsers = parser.add_subparsers(dest="watcher_type", help="types of Watcher")

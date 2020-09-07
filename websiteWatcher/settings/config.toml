@@ -1,5 +1,5 @@
 log_level = "DEBUG"
-log_dir = "/home/yuehl/projects/Other/personal/websiteWatcher/logs"
+log_dir = "/tmp"
 
 [project]
 author = "Yu-Yueh Liu"

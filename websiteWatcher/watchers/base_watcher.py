@@ -39,6 +39,7 @@ class BaseWatcher:
         log.info(f"Setting up {self.name}")
         chrome_options = Options()
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
         self.driver = webdriver.Chrome(
             executable_path=os.path.abspath("chromedriver"),
             chrome_options=chrome_options,
