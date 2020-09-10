@@ -1,14 +1,14 @@
 # WebsiteWatcher
 
-WebsiteWatcher is a Python tool for running a website watcher.
+WebsiteWatcher is a Python Command line tool that watches a website and notifies the user via email or sms.
 
 ## Prerequisites
 
 Before running the WebsiteWatcher, you need to have the following prerequisites:
 - Python 3
 - Pip
-- Google Chrome/Chromium
-- ChromeDriver matching your Google Chrome version (see ChromeDriver versions [here](https://chromedriver.storage.googleapis.com/index.html))
+- Google Chrome / Chromium
+- ChromeDriver matching your Google Chrome/CHromium version (see ChromeDriver versions [here](https://chromedriver.storage.googleapis.com/index.html))
 
 _Note: the chromeDriver needs to be in the root directory of the repository_
 
@@ -18,12 +18,6 @@ Clone the repository and run the following command to install the dependencies:
 
 ```
 pip install -r requirements.txt
-```
-
-or run the setup script
-
-```
-python setup.py install --user
 ```
 
 ## Usage
