@@ -1,4 +1,5 @@
-log_level = "INFO"
+environment = "development"
+log_level = "DEBUG"
 log_dir = "/tmp"
 
 [project]
@@ -9,7 +10,7 @@ list_watcher = "List Watcher monitors changes in a list of items"
 price_watcher = "Price Watcher monitors changes in the price of an item"
 
 [watcher_settings]
-polling_interval = 10
+polling_interval = 3600
 
 [email]
 api_key = "some_api_key"

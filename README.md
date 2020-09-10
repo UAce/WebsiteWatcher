@@ -2,53 +2,64 @@
 
 WebsiteWatcher is a Python tool for running a website watcher.
 
+## Prerequisites
+
+Before running the WebsiteWatcher, you need to have the following prerequisites:
+- Clone the repository
+- Python 3 and pip installed
+- Google Chrome installed
+- ChromeDriver matching your Google Chrome version (see ChromeDriver versions [here](https://chromedriver.storage.googleapis.com/index.html))
+_Note: the chromeDriver needs to be in the root directory of the repository_
+
 ## Installation
 
-...
+Run the following command to install the dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+You can also run the setup script
+
+```
+python setup.py install --user
+```
 
 ## Usage
 
 Look at the [sample commands](https://github.com/UAce/WebsiteWatcher/tree/master/example) for examples.
 
 ```bash
-usage: main.py [-h] --url URL [--list-tag LIST_TAG]
-               [--list-attribute LIST_ATTRIBUTE]
-               [--list-attribute-value LIST_ATTRIBUTE_VALUE]
-               [--target-tag TARGET_TAG] [--target-attribute TARGET_ATTRIBUTE]
-               [--target-attribute-value TARGET_ATTRIBUTE_VALUE]
-               [--initial-count INITIAL_COUNT]
-               [--polling-interval POLLING_INTERVAL]
-               {list,price}
+usage: websiteWatcher.py [-h] [--polling-interval POLLING_INTERVAL]
+                         [--notification-method {email,sms}] [--debug]
+                         {list,price} ...
 
 WebsiteWatcher is a Python CLI tool for running a website watcher
 
 positional arguments:
-  {list,price}          the watcher type
+  {list,price}          types of Watcher
 
 optional arguments:
   -h, --help            show this help message and exit
-  --url URL             the url of the web page to watch
-  --list-tag LIST_TAG   the HTML tag of the list to watch
-  --list-attribute LIST_ATTRIBUTE
-                        an HTML attribute of the list element
-  --list-attribute-value LIST_ATTRIBUTE_VALUE
-                        the value of the HTML attribute for the list element
-  --target-tag TARGET_TAG
-                        the HTML tag of the target item
-  --target-attribute TARGET_ATTRIBUTE
-                        an HTML attribute of the target item
-  --target-attribute-value TARGET_ATTRIBUTE_VALUE
-                        the value of the HTML attribute for the target item
-  --initial-count INITIAL_COUNT
-                        Initial number of items in the list
   --polling-interval POLLING_INTERVAL
-                        Number of seconds to wait between each poll
-
+                        Seconds to wait between each poll. Default is 60
+  --notification-method {email,sms}
+                        The method of notification. Default is email.
+  --debug               Show debug logs
 ```
 
 ## List Watcher
 
 Detects change in a list of element.
+
+```
+usage: websiteWatcher.py list [-h] --url URL --list-tag LIST_TAG
+                              --list-attribute LIST_ATTRIBUTE
+                              --list-attribute-value LIST_ATTRIBUTE_VALUE
+                              --target-tag TARGET_TAG --target-attribute
+                              TARGET_ATTRIBUTE --target-attribute-value
+                              TARGET_ATTRIBUTE_VALUE
+```
 
 ## Price Watcher
 

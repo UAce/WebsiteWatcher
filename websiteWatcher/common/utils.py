@@ -1,8 +1,10 @@
+import os
 import logging
 import argparse
 from argparse import Namespace
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from typing import IO
 
 from websiteWatcher.settings.config import (
     config,
@@ -108,3 +110,7 @@ def send_email(subject: str = None, content: str = None) -> None:
         sg.send(message)
     except Exception as e:
         log.error(e)
+
+
+def read_file(path_to_file: str) -> IO:
+    return open(path_to_file).read()

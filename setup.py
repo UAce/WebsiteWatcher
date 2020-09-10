@@ -1,14 +1,14 @@
 import os
 from setuptools import setup, find_packages
 
+from websiteWatcher.common.utils import read_file
 
-# Utility function to read the README file.
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
+root_dir = os.path.dirname(os.path.abspath(__file__))
+requirementPath = f"{root_dir}/requirements.txt"
+install_requires = []  # E.g. ["gunicorn", "docutils>=0.3", "lxml==0.5a7"]
+if os.path.isfile(requirementPath):
+    with open(requirementPath) as f:
+        install_requires = f.read().splitlines()
 
 setup(
     name="WebsiteWatcher",
@@ -25,16 +25,7 @@ setup(
             "websiteWatcher.watchers",
         ]
     ),
-    long_description=read("README.md"),
-    install_requires=[
-        "beautifulsoup4==4.6.0",
-        "selenium==3.141.0",
-        "sendgrid==6.4.6",
-        "toml==0.10.1",
-        "ConfigArgParse==0.11.0",
-    ],
+    long_description=read_file(f"{root_dir}/README.md"),
+    install_requires=install_requires,
     setup_requires=["flake8"],
-    entry_points={
-        "console_scripts": ["websiteWatcher=websiteWatcher.watcher_cli:main"]
-    },
 )

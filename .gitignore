@@ -1,8 +1,14 @@
-draft/*
-.vscode/*
+# Directories to ignore
+.vscode/
+.tox/
+.eggs/
+WebsiteWatcher.egg-info/
+dist/
+build/
+logs/
+draft/
+
+# Files to ignore
 __pycache__
-logs/*
-*.pyc
-.tox/*
-.eggs/*
-WebsiteWatcher.egg-info/*
+.pyc
+local.toml
