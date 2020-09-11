@@ -50,9 +50,9 @@ class ListWatcher(BaseWatcher):
     def find_count(
         self, element: element.Tag, target: str, target_attr: str, target_attr_val: str
     ) -> None:
-        print(target_attr, target_attr_val)
         children = element.findChildren()  # Finds all children recursively
         count = 0
+        new_list_items = []
         for i in range(len(children)):
             child = children[i]
             if (
@@ -61,8 +61,10 @@ class ListWatcher(BaseWatcher):
                 and child.name == target
             ):
                 log.info(f"found [{child.text}]")
-                self.list_items.append(child.text)
+                isNew = "(NEW)" if child.text in self.list_items else ""
+                new_list_items.append(f"{child.text} {isNew}")
                 count += 1
+        self.list_items = new_list_items
         return count
 
     def validate_target_list(self, lists: list) -> element.Tag:
