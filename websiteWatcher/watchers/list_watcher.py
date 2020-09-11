@@ -84,6 +84,8 @@ class ListWatcher(BaseWatcher):
             There are now {self.current_count} items.
             <br><br>
             {items}
+            <br><br>
+            <a href="{self.url}">View the website</a>
             """
 
             send_email(f"{self.name} News!", content)
