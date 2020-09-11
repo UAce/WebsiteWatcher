@@ -97,11 +97,11 @@ class ListWatcher(BaseWatcher):
         )
 
         if target_list.is_displayed():
-            self.driver.get_screenshot_as_file("list-watcher-page.png")
+            self.driver.get_screenshot_as_file("images/list-watcher-page.png")
             left = int(target_list.location["x"])
             top = int(target_list.location["y"])
             right = int(target_list.location["x"] + target_list.size["width"])
             bottom = int(target_list.location["y"] + target_list.size["height"])
-            im = Image.open("list-watcher-page.png")
+            im = Image.open("images/list-watcher-page.png")
             im = im.crop((left, top, right, bottom))
-            im.save("list-watcher-target.png")
+            im.save("images/list-watcher-target.png")
