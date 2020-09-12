@@ -29,7 +29,7 @@ class ListWatcher(BaseWatcher):
         )
         target_list = self.validate_target_list(lists)
 
-        current_count = self.find_count(
+        self.current_count = self.find_count(
             target_list,
             self.options["target_tag"],
             self.options["target_attr"],
@@ -37,13 +37,12 @@ class ListWatcher(BaseWatcher):
         )
         self.take_screenshot()
         if self.initial_count is None:
-            self.initial_count = current_count
-            self.current_count = self.initial_count
-        if current_count != self.initial_count:
-            log.info(f"Change detected. Number of items: {current_count}")
-            self.current_count = current_count
+            self.initial_count = self.current_count
+        if self.current_count != self.initial_count:
+            log.info(f"Change detected. Number of items: {self.current_count}")
+            self.initial_count = self.current_count
             self.report()
-            self.completed = True
+            # self.completed = True
         else:
             log.warn(f"No change detected. Retrying in {self.polling_interval}s...")
 
