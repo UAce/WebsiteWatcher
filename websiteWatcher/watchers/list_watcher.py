@@ -15,7 +15,8 @@ class ListWatcher(BaseWatcher):
         super().__init__(url, options)
         self.initial_count = None
         self.current_count = self.initial_count
-        self.list_items = []
+        self.current_list_items = []
+        self.new_list_items = []
 
     def work(self):
         log.info(f"{self.name} working...")
@@ -37,11 +38,12 @@ class ListWatcher(BaseWatcher):
         )
         self.take_screenshot()
         if self.initial_count is None:
-            self.initial_count = self.current_count
-        if self.current_count != self.initial_count:
-            log.info(f"Change detected. Number of items: {self.current_count}")
-            self.initial_count = self.current_count
+            self.set_current_list()
+        if set(self.current_list_items) != set(self.new_list_items):
+            new_list_items = ", ".join(self.new_list_items)
+            log.info(f"Change detected. New list items: {new_list_items}")
             self.report()
+            self.set_current_list()
             # self.completed = True
         else:
             log.warn(f"No change detected. Retrying in {self.polling_interval}s...")
@@ -51,7 +53,7 @@ class ListWatcher(BaseWatcher):
     ) -> None:
         children = element.findChildren()  # Finds all children recursively
         count = 0
-        new_list_items = []
+        self.new_list_items = []
         for i in range(len(children)):
             child = children[i]
             if (
@@ -60,10 +62,8 @@ class ListWatcher(BaseWatcher):
                 and child.name == target
             ):
                 log.info(f"found [{child.text}]")
-                isNew = "(NEW)" if child.text in self.list_items else ""
-                new_list_items.append(f"{child.text} {isNew}")
+                self.new_list_items.append(f"{child.text}")
                 count += 1
-        self.list_items = new_list_items
         return count
 
     def validate_target_list(self, lists: list) -> element.Tag:
@@ -79,11 +79,13 @@ class ListWatcher(BaseWatcher):
     def report(self, e: Exception = None) -> None:
         super().report(e)
         if e is None:
-            items = "<br>- " + "<br>- ".join(self.list_items)
+            items = "<br>- " + "<br>- ".join(
+                self.diff_items(self.current_list_items, self.new_list_items)
+            )
             content = f"""
             The list you are watching has changed!
             There are now {self.current_count} items.
-            <br><br>
+            <br>
             {items}
             <br><br>
             <a href="{self.url}">View the website</a>
@@ -108,3 +110,14 @@ class ListWatcher(BaseWatcher):
             im = Image.open("images/list-watcher-page.png")
             im = im.crop((left, top, right, bottom))
             im.save("images/list-watcher-target.png")
+
+    def diff_items(self, old_list: list, new_list: list) -> list:
+        temp_list = []
+        for item in new_list:
+            renamed_item = f"{item} (NEW)" if not item in old_list else item
+            temp_list.append(renamed_item)
+        return temp_list
+
+    def set_current_list(self) -> None:
+        self.initial_count = self.current_count
+        self.current_list_items = self.new_list_items
