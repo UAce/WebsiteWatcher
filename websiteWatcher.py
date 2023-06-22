@@ -32,7 +32,6 @@ def main() -> None:
             threshold_price=args.threshold_price,
             notify_on_change=args.notify_on_change,
         )
-        print(options)
         watcher = PriceWatcher(args.url, options)
     else:
         raise Exception(f"Invalid watcher_type [{args.watcher_type}]")

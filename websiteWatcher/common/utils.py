@@ -10,7 +10,7 @@ from websiteWatcher.settings.config import (
     config,
     email_api_key,
     email_sender,
-    email_recipient,
+    email_recipients,
 )
 from websiteWatcher.common.logger import color_formatter, default_formatter
 
@@ -121,19 +121,25 @@ def parse_arguments() -> Namespace:
 
 
 def send_email(subject: str = None, content: str = None) -> None:
-    message = Mail(
-        from_email=email_sender,
-        to_emails=email_recipient,
-        subject=subject or "Henlo World",
-        html_content=content or "test",
-    )
-    try:
-        log.info(f"Sending email from {email_sender} to {email_recipient}")
-        sg = SendGridAPIClient(email_api_key)
-        sg.send(message)
-        log.info("Email sent!")
-    except Exception as e:
-        log.error(e)
+    # For each recipient, send an email
+    for recipient in email_recipients:
+        message = Mail(
+            from_email=email_sender,
+            to_emails=recipient,
+            subject=subject or "Henlo World",
+            html_content=content or "test",
+        )
+        try:
+            log.info(f"Sending email from {email_sender} to {recipient}")
+            sg = SendGridAPIClient(email_api_key)
+            response = sg.send(message)
+
+            if response.status_code == 202:
+                log.info("Email sent!")
+            else:
+                log.error("Email failed to send")
+        except Exception as e:
+            log.error(e)
 
 
 def read_file(path_to_file: str) -> IO:

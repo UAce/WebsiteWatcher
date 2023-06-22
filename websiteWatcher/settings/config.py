@@ -14,4 +14,4 @@ config.get("project")
 # Get email info
 email_api_key = os.getenv("EMAIL_API_KEY", config["email"]["api_key"])
 email_sender = os.getenv("EMAIL_SENDER", config["email"]["sender"])
-email_recipient = os.getenv("EMAIL_RECIPIENT", config["email"]["recipient"])
+email_recipients = os.getenv("EMAIL_RECIPIENTS", config["email"]["recipients"]).split(",")

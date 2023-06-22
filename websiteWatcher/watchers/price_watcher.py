@@ -1,7 +1,6 @@
 import logging
 import collections
 import re
-from PIL import Image
 from selenium.webdriver.common.by import By
 import time
 
@@ -69,7 +68,6 @@ class PriceWatcher(BaseWatcher):
             self.initial_price = self.displayed_price
             self.completed = self.options['stop_on_completion']
         else:
-            self.report()
             log.warn(f"No price change detected. Retrying in {self.polling_interval}s...")
 
     def report(self, e: Exception = None) -> None:
@@ -101,16 +99,15 @@ class PriceWatcher(BaseWatcher):
                             >
                                 <tr>
                                 <td>
-                                    <h2>Price change:</h2>
-                                    <span style="font-size: 16px; color: red">${self.initial_price}</span> 
-                                    <span style="font-size: 32px; color: white">→</span> 
-                                    <span style="font-size: 16px; color: green">${self.displayed_price}</span> 
+                                    <span style="font-weight: bold; font-size: 16px; color: red">${self.initial_price}</span> 
+                                    <span style="font-weight: bold; font-size: 32px; color: white">→</span> 
+                                    <span style="font-weight: bold; font-size: 16px; color: green">${self.displayed_price}</span> 
                                     <table
                                     role="presentation"
                                     border="0"
                                     cellpadding="0"
                                     cellspacing="0"
-                                    
+                                    style="margin-top: 16px;"
                                     >
                                     <tbody>
                                         <tr>
@@ -129,7 +126,7 @@ class PriceWatcher(BaseWatcher):
                                                     href="{self.url}"
                                                     target="_blank"
                                                     style="color: white; font-weight: bold; text-decoration: none; cursor: pointer; padding: 16px;"
-                                                    >See the new price</a
+                                                    >Check out the new price!</a
                                                     >
                                                 </td>
                                                 </tr>
@@ -153,18 +150,18 @@ class PriceWatcher(BaseWatcher):
             </table>
             """
 
-            send_email(f"{self.name} for {self.description}: {reason}!", content)
+            send_email(f"{reason}! ({self.description})", content)
 
     def take_screenshot(self):
         self.driver.get_screenshot_as_file("images/Price-watcher-page.png")
-        body = self.driver.find_element(By.TAG_NAME, 'body')
-        left = int(body.location["x"])
-        top = int(body.location["y"])
-        right = int(body.location["x"] + body.size["width"])
-        bottom = int(body.location["y"] + body.size["height"])
-        im = Image.open("images/Price-watcher-page.png")
-        im = im.crop((left, top, right, bottom))
-        im.save("images/Price-watcher-target.png")
+        # body = self.driver.find_element(By.TAG_NAME, 'body')
+        # left = int(body.location["x"])
+        # top = int(body.location["y"])
+        # right = int(body.location["x"] + body.size["width"])
+        # bottom = int(body.location["y"] + body.size["height"])
+        # im = Image.open("images/Price-watcher-page.png")
+        # im = im.crop((left, top, right, bottom))
+        # im.save("images/Price-watcher-cropped.png")
 
     def reset_state(self):
         self.price_change_detected = False

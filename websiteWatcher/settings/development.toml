@@ -15,4 +15,4 @@ polling_interval = 3600
 [email]
 api_key = "some_api_key"
 sender = "from_email@example.com"
-recipient = "to@example.com"
+recipients = "to@example.com, to2@example.com"

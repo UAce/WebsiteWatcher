@@ -7,6 +7,7 @@ dist/
 build/
 logs/
 draft/
+images/
 
 # Files to ignore
 __pycache__
