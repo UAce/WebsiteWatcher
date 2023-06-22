@@ -31,7 +31,6 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         "--polling-interval",
         type=int,
-        default=60,
         help="Seconds to wait between each poll. Default is 60",
     )
     parser.add_argument(
@@ -39,9 +38,11 @@ def parse_arguments() -> Namespace:
         type=str,
         default="email",
         choices=["email", "sms"],
-        help="The method of notification. Default is email.",
+        help="The method of notification. Default is email",
     )
     parser.add_argument("--debug", action="store_true", help="Show debug logs")
+    parser.add_argument("--stop-on-completion", action="store_true",
+                        help="Stop the watcher when it completes. Default is disabled")
 
     # Create Subparsers for different types of watchers
     subparsers = parser.add_subparsers(dest="watcher_type", help="types of Watcher")
@@ -50,6 +51,12 @@ def parse_arguments() -> Namespace:
     list_parser = subparsers.add_parser("list")
     list_parser.add_argument(
         "--url", type=str, help="the url of the web page to watch", required=True
+    )
+    list_parser.add_argument(
+        "--description",
+        type=str,
+        help="A short description for the watcher",
+        required=True,
     )
     list_parser.add_argument(
         "--list-tag", type=str, help="the HTML tag of the list to watch", required=True
@@ -88,7 +95,22 @@ def parse_arguments() -> Namespace:
         "--url", type=str, help="the url of the web page to watch", required=True
     )
     price_parser.add_argument(
-        "--price", type=float, help="initial price of the item", required=True
+        "--description",
+        type=str,
+        help="A short description for the watcher",
+        required=True,
+    )
+    price_parser.add_argument(
+        "--initial-price", type=float, help="the initial price of the item", required=True
+    )
+    price_parser.add_argument(
+        "--full-xpath", type=str, help="the full xpath of the price element", required=True
+    )
+    price_parser.add_argument(
+        "--threshold-price", type=float, help="the threshold price after which you want to be notified", required=False
+    )
+    price_parser.add_argument(
+        "--notify-on-change", help="whether to notify when the price changes. Default is disabled", required=False, action='store_true'
     )
 
     # Attempt to parse unparsed optional arguments that are out of order
@@ -106,8 +128,10 @@ def send_email(subject: str = None, content: str = None) -> None:
         html_content=content or "test",
     )
     try:
+        log.info(f"Sending email from {email_sender} to {email_recipient}")
         sg = SendGridAPIClient(email_api_key)
         sg.send(message)
+        log.info("Email sent!")
     except Exception as e:
         log.error(e)
 

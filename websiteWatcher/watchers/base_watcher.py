@@ -21,7 +21,7 @@ class BaseWatcher:
         self.setup()
         self.polling_interval = (
             self.options["polling_interval"]
-            or config["watcher_settings"]["polling_interval"]
+            or config["watcher_settings"]["polling_interval"] or 60  # default 60s
         )
 
     def start(self) -> None:
@@ -29,11 +29,16 @@ class BaseWatcher:
         try:
             while not self.completed:
                 self.work()
-                time.sleep(self.polling_interval)
+
+                if not self.completed:
+                    time.sleep(self.polling_interval)
+
+            log.info(f"Completed {self.name}")
         except Exception as e:
-            self.driver.close()
             self.report(e)
             raise e
+        finally:
+            self.driver.close()
 
     def setup(self) -> None:
         log.info(f"Setting up {self.name}")

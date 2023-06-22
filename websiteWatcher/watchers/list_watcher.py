@@ -1,11 +1,15 @@
 import logging
+import collections
 from PIL import Image
 from bs4 import BeautifulSoup, element
+from selenium.webdriver.common.by import By
 
 from websiteWatcher.common.utils import send_email
 from websiteWatcher.watchers.base_watcher import BaseWatcher
 
 log = logging.getLogger(__name__)
+collections.Callable = collections.abc.Callable
+collections.MutableMapping = collections.abc.MutableMapping
 
 
 class ListWatcher(BaseWatcher):
@@ -97,9 +101,9 @@ class ListWatcher(BaseWatcher):
         list_tag = self.options["list_tag"]
         list_attr = self.options["list_attr"]
         list_attr_val = self.options["list_attr_val"]
-        target_list = self.driver.find_element_by_xpath(
-            f"//{list_tag}[contains(@{list_attr}, '{list_attr_val}')]"
-        )
+        target_list = self.driver.find_element(By.XPATH,
+                                               f"//{list_tag}[contains(@{list_attr}, '{list_attr_val}')]"
+                                               )
 
         if target_list.is_displayed():
             self.driver.get_screenshot_as_file("images/list-watcher-page.png")
