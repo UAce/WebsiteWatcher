@@ -1,3 +1,4 @@
+import base64
 import logging
 import collections
 import re
@@ -6,6 +7,7 @@ import time
 
 from websiteWatcher.common.utils import send_email
 from websiteWatcher.watchers.base_watcher import BaseWatcher
+from sendgrid.helpers.mail import (Attachment, FileContent, FileName, FileType, Disposition)
 
 log = logging.getLogger(__name__)
 
@@ -72,96 +74,108 @@ class PriceWatcher(BaseWatcher):
 
     def report(self, e: Exception = None) -> None:
         super().report(e)
-        self.take_screenshot()
+
         if e is None:
-            reason = "Price change detected" if self.price_change_detected else "Price reached threshold price"
+            reason = "Price changed" if self.price_change_detected else "Price reached threshold price"
             content = f"""
-            <table
-                role="presentation"
-                border="0"
-                cellpadding="0"
-                cellspacing="0"
-                class="body"
-                >
-                <tr>
-                    <td class="container">
-                    <div class="content">
-                        <!-- START CENTERED WHITE CONTAINER -->
-                        <table role="presentation" class="main">
-                        <!-- START MAIN CONTENT AREA -->
-                        <tr>
-                            <td class="wrapper">
-                            <table
-                                role="presentation"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                            >
-                                <tr>
-                                <td>
-                                    <span style="font-weight: bold; font-size: 16px; color: red">${self.initial_price}</span> 
-                                    <span style="font-weight: bold; font-size: 32px; color: white">→</span> 
-                                    <span style="font-weight: bold; font-size: 16px; color: green">${self.displayed_price}</span> 
-                                    <table
+                <table
+                    role="presentation"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="body"
+                    >
+                    <tr>
+                        <td class="container">
+                        <div class="content">
+                            <!-- START CENTERED WHITE CONTAINER -->
+                            <table role="presentation" class="main">
+                            <!-- START MAIN CONTENT AREA -->
+                            <tr>
+                                <td class="wrapper">
+                                <table
                                     role="presentation"
                                     border="0"
                                     cellpadding="0"
                                     cellspacing="0"
-                                    style="margin-top: 16px;"
-                                    >
-                                    <tbody>
-                                        <tr>
-                                        <td align="left">
-                                            <table
-                                            role="presentation"
-                                            border="0"
-                                            cellpadding="0"
-                                            cellspacing="0"
-                                            style="height: 40px; background-color: #2f55ff; border-radius: 4px;"
-                                            >
-                                            <tbody>
-                                                <tr>
-                                                <td>
-                                                    <a
-                                                    href="{self.url}"
-                                                    target="_blank"
-                                                    style="color: white; font-weight: bold; text-decoration: none; cursor: pointer; padding: 16px;"
-                                                    >Check out the new price!</a
-                                                    >
-                                                </td>
-                                                </tr>
-                                            </tbody>
-                                            </table>
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                                >
+                                    <tr>
+                                    <td>
+                                        <span style="font-weight: bold; font-size: 16px; color: red">${self.initial_price}</span> 
+                                        <span style="font-weight: bold; font-size: 32px;">→</span> 
+                                        <span style="font-weight: bold; font-size: 16px; color: green">${self.displayed_price}</span> 
+                                        <table
+                                        role="presentation"
+                                        border="0"
+                                        cellpadding="0"
+                                        cellspacing="0"
+                                        style="margin-top: 16px;"
+                                        >
+                                        <tbody>
+                                            <tr>
+                                            <td align="left">
+                                                <table
+                                                role="presentation"
+                                                border="0"
+                                                cellpadding="0"
+                                                cellspacing="0"
+                                                style="height: 40px; background-color: #2f55ff; border-radius: 4px;"
+                                                >
+                                                <tbody>
+                                                    <tr>
+                                                    <td>
+                                                        <a
+                                                        href="{self.url}"
+                                                        target="_blank"
+                                                        style="color: white; font-weight: bold; text-decoration: none; cursor: pointer; padding: 16px;"
+                                                        >Check out the new price!</a
+                                                        >
+                                                    </td>
+                                                    </tr>
+                                                </tbody>
+                                                </table>
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                    </td>
+                                    </tr>
+                                </table>
                                 </td>
-                                </tr>
+                            </tr>
+                            <!-- END MAIN CONTENT AREA -->
                             </table>
-                            </td>
-                        </tr>
-                        <!-- END MAIN CONTENT AREA -->
-                        </table>
-                        <!-- END CENTERED WHITE CONTAINER -->
-                    </div>
-                    </td>
-                </tr>
-            </table>
+                            <!-- END CENTERED WHITE CONTAINER -->
+                        </div>
+                        </td>
+                    </tr>
+                </table>
             """
 
-            send_email(f"{reason}! ({self.description})", content)
+            self.take_screenshot()
+            with open('images/price-watcher-page.png', 'rb') as f:
+                data = f.read()
+                f.close()
+            encoded_file = base64.b64encode(data).decode()
+            attachedFile = Attachment(
+                FileContent(encoded_file),
+                FileName('screenshot.png'),
+                FileType('image/png'),
+                Disposition('attachment')
+            )
+
+            send_email(f"{reason}! ({self.description})", content, attachedFile)
 
     def take_screenshot(self):
-        self.driver.get_screenshot_as_file("images/Price-watcher-page.png")
+        self.driver.get_screenshot_as_file("images/price-watcher-page.png")
         # body = self.driver.find_element(By.TAG_NAME, 'body')
         # left = int(body.location["x"])
         # top = int(body.location["y"])
         # right = int(body.location["x"] + body.size["width"])
         # bottom = int(body.location["y"] + body.size["height"])
-        # im = Image.open("images/Price-watcher-page.png")
+        # im = Image.open("images/price-watcher-page.png")
         # im = im.crop((left, top, right, bottom))
-        # im.save("images/Price-watcher-cropped.png")
+        # im.save("images/price-watcher-cropped.png")
 
     def reset_state(self):
         self.price_change_detected = False

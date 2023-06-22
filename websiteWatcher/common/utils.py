@@ -3,7 +3,7 @@ import logging
 import argparse
 from argparse import Namespace
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, Attachment
 from typing import IO
 
 from websiteWatcher.settings.config import (
@@ -120,7 +120,7 @@ def parse_arguments() -> Namespace:
     return args
 
 
-def send_email(subject: str = None, content: str = None) -> None:
+def send_email(subject: str = None, content: str = None, attachedFile: Attachment = None) -> None:
     # For each recipient, send an email
     for recipient in email_recipients:
         message = Mail(
@@ -129,6 +129,10 @@ def send_email(subject: str = None, content: str = None) -> None:
             subject=subject or "Henlo World",
             html_content=content or "test",
         )
+
+        if (attachedFile is not None):
+            message.attachment = attachedFile
+
         try:
             log.info(f"Sending email from {email_sender} to {recipient}")
             sg = SendGridAPIClient(email_api_key)
