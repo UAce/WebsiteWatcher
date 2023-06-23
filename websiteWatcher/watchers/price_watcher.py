@@ -54,10 +54,9 @@ class PriceWatcher(BaseWatcher):
 
         # If threshold price is not defined, return early
         if (self.options['threshold_price'] is None):
-            return
-        else:
             log.warn(
                 f"Current price: ${self.displayed_price}. No price change detected. Retrying in {self.polling_interval}s...")
+            return
 
         is_threshold_higher = self.options['threshold_price'] > self.options['initial_price']
         is_threshold_reached = self.displayed_price >= self.options[
@@ -70,7 +69,8 @@ class PriceWatcher(BaseWatcher):
             self.initial_price = self.displayed_price
             self.completed = self.options['stop_on_completion']
         else:
-            log.warn(f"No price change detected. Retrying in {self.polling_interval}s...")
+            log.warn(
+                f"Current price: ${self.displayed_price}. No price change detected. Retrying in {self.polling_interval}s...")
 
     def report(self, e: Exception = None) -> None:
         super().report(e)
